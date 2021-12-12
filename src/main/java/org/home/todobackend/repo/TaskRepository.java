@@ -19,7 +19,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "(:completed is null or t.completed=:completed) and " +  // учитываем, что параметр может быть null или пустым
             "(:priorityId is null or t.priority.id=:priorityId) and " +
             "(:categoryId is null or t.category.id=:categoryId) and " +
-            "(:categoryId is null or t.category.id=:categoryId) and " +
             "(" +
             "(cast(:dateFrom as timestamp) is null or t.taskDate>=:dateFrom) and " +
             "(cast(:dateTo as timestamp) is null or t.taskDate<=:dateTo)" +

@@ -1,6 +1,6 @@
 package org.home.todobackend.controller;
 import org.home.todobackend.entity.Priority;
-import org.home.todobackend.search.PrioritySearchValues;
+import org.home.todobackend.search.SearchValues;
 import org.home.todobackend.service.PriorityService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -91,7 +91,7 @@ public class PriorityController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<List<Priority>> search(@RequestBody PrioritySearchValues prioritySearchValues) {
+    public ResponseEntity<List<Priority>> search(@RequestBody SearchValues prioritySearchValues) {
         if (prioritySearchValues.getEmail() == null || prioritySearchValues.getEmail().trim().length() == 0) {
             return new ResponseEntity("missed param: email mast be not null!", HttpStatus.NOT_ACCEPTABLE);
         }
