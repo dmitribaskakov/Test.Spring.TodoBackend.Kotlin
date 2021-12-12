@@ -1,33 +1,37 @@
-package org.home.todobackend.aop;
+package org.home.todobackend.aop
 
-import lombok.extern.java.Log;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StopWatch;
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
+import org.aspectj.lang.annotation.Around
+import kotlin.Throws
+import org.aspectj.lang.ProceedingJoinPoint
+import org.aspectj.lang.annotation.Aspect
+import org.aspectj.lang.reflect.MethodSignature
+import org.springframework.stereotype.Component
+import org.springframework.util.StopWatch
 
-@Log
 @Aspect
 @Component
+class LoggingAspect {
 
-public class LoggingAspect {
+    companion object {
+        val log: Logger = LogManager.getLogger(LoggingAspect::class.java.name)
+    }
 
     @Around("execution(* org.home.todobackend.controller..*(..))")
-    public Object profileControllerMethods(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+    fun profileControllerMethods(proceedingJoinPoint: ProceedingJoinPoint): Any {
         //Получаем сигнатуру методов
-        MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
-        String className = methodSignature.getDeclaringType().getSimpleName();
-        String methodName = methodSignature.getName();
-        log.info("-------  "+className+"."+methodName+"   -------");
-        final StopWatch stopWatch = new StopWatch();
+        val methodSignature = proceedingJoinPoint.signature as MethodSignature
+        val className = methodSignature.declaringType.simpleName
+        val methodName = methodSignature.name
+        log.info("-------  $className.$methodName   ---- Start ---")
+        val stopWatch = StopWatch()
         //Засекаем время выполнения метода
-        stopWatch.start();
+        stopWatch.start()
         //Выполняем сам метод
-        Object result = proceedingJoinPoint.proceed();
-        stopWatch.stop();
-        log.info("-------  "+className+"."+methodName+"   ----   Execution :"+stopWatch.getTotalTimeMillis()+"ms   -------");
-        return result;
+        val result = proceedingJoinPoint.proceed()
+        stopWatch.stop()
+        log.info("-------  $className.$methodName  ----   Execution :" + stopWatch.totalTimeMillis + "ms   -------")
+        return result
     }
 }
