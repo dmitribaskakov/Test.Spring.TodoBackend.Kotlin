@@ -13,11 +13,9 @@ interface CategoryRepository : JpaRepository<Category, Long> {
     // поиск категорий пользователя (по email)
     fun findByUserEmailOrderByTitleAsc(email: String): List<Category>
 
-    @Query(
-        "SELECT c From Category as c where " +
-                "(:title is null or :title = '' or lower(c.title) like lower(concat('%', :title, '%')) ) " +
-                "and c.user.email = :email " +
-                "order by c.title asc"
-    )
+    @Query("SELECT c From Category as c where " +
+            "(:title is null or :title = '' or lower(c.title) like lower(concat('%', :title, '%')) ) " +
+            "and c.user.email = :email " +
+            "order by c.title asc")
     fun findByTitle(@Param("title") title: String?, @Param("email") email: String): List<Category>
 }

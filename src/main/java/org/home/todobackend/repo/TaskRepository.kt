@@ -11,20 +11,21 @@ import java.util.*
 
 @Repository
 interface TaskRepository : JpaRepository<Task, Long> {
-    @Query(
-        "SELECT t FROM Task t where " +
-                "(:title is null or :title='' or lower(t.title) like lower(concat('%', :title,'%'))) and" +
-                "(:completed is null or t.completed=:completed) and " +  // учитываем, что параметр может быть null или пустым
-                "(:priorityId is null or t.priority.id=:priorityId) and " +
-                "(:categoryId is null or t.category.id=:categoryId) and " +
-                "(" +
-                "(cast(:dateFrom as timestamp) is null or t.taskDate>=:dateFrom) and " +
-                "(cast(:dateTo as timestamp) is null or t.taskDate<=:dateTo)" +
-                ") and " +
-                "(t.user.email=:email)"
-    )
-    fun  // искать по всем переданным параметрам (пустые параметры учитываться не будут)
-            findByParams(
+    // поиск всех задач конкретного пользователя
+    fun findByUserEmailOrderByTitleAsc(email: String): List<Task>
+
+    @Query("SELECT t FROM Task t where " +
+            "(:title is null or :title='' or lower(t.title) like lower(concat('%', :title,'%'))) and" +
+            "(:completed is null or t.completed=:completed) and " +  // учитываем, что параметр может быть null или пустым
+            "(:priorityId is null or t.priority.id=:priorityId) and " +
+            "(:categoryId is null or t.category.id=:categoryId) and " +
+            "(" +
+            "(cast(:dateFrom as timestamp) is null or t.taskDate>=:dateFrom) and " +
+            "(cast(:dateTo as timestamp) is null or t.taskDate<=:dateTo)" +
+            ") and " +
+            "(t.user.email=:email)")
+    // искать по всем переданным параметрам (пустые параметры учитываться не будут)
+    fun findByParams(
         @Param("title") title: String?,
         @Param("completed") completed: Boolean?,
         @Param("priorityId") priorityId: Long?,
@@ -34,7 +35,4 @@ interface TaskRepository : JpaRepository<Task, Long> {
         @Param("dateTo") dateTo: Date?,
         pageable: Pageable
     ): Page<Task>
-
-    // поиск всех задач конкретного пользователя
-    fun findByUserEmailOrderByTitleAsc(email: String): List<Task>
 }
