@@ -1,65 +1,47 @@
-package org.home.todobackend.entity;
+package org.home.todobackend.entity
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Type;
-import javax.persistence.*;
-import java.util.Objects;
+
+import org.hibernate.annotations.Cache
+import org.hibernate.annotations.CacheConcurrencyStrategy
+import org.hibernate.annotations.Type
+import java.util.Objects
+import javax.persistence.*
 
 /*
 Вся активность пользователя (активация аккаунта, другие действия по необходимости)
 */
-
 @Entity
 @Table(name = "activity", schema = "todolist")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Cacheable
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-
-public class Activity {
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    val id: Long? = null
 
     @Column(name = "activated", nullable = false)
     @Type(type = "org.hibernate.type.NumericBooleanType")
-    private boolean activated;  // 1 = true, 0 = false
+    val activated = false // 1 = true, 0 = false
 
     @Column(updatable = false)
-    private String uuid;
+    val uuid: String? = null
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    val user: User? = null
 
-    @Override
-    public String toString() {
-        return "Activity{" +
-                "id=" + id +
-                ", activated=" + activated +
-                ", uuid='" + uuid + '\'' +
-                ", user=" + user +
-                '}';
+    override fun toString(): String {
+        return uuid!!
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Activity activity = (Activity) o;
-        return id.equals(activity.id);
+    override fun equals(o: Any?): Boolean {
+        if (this === o) return true
+        if (o == null || javaClass != o.javaClass) return false
+        val activity = o as Activity
+        return id == activity.id
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    override fun hashCode(): Int {
+        return Objects.hash(id)
     }
 }

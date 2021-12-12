@@ -1,65 +1,57 @@
-package org.home.todobackend.entity;
+package org.home.todobackend.entity
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import java.util.Objects;
+import lombok.AllArgsConstructor
+import lombok.NoArgsConstructor
+import org.hibernate.annotations.CacheConcurrencyStrategy
+import com.fasterxml.jackson.annotation.JsonProperty
+import lombok.Getter
+import lombok.Setter
+import org.hibernate.annotations.Cache
+import org.home.todobackend.entity.Stat
+import java.util.Objects
+import javax.persistence.*
 
 /*
 общая статистика по задачам (независимо от категорий задач)
 */
-
 @Entity
 @Table(name = "stat", schema = "todolist")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Cacheable
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-
-public class Stat {
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+class Stat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Long id;
+    val id: Long? = null
 
     @Column(name = "completed_total", updatable = false)
-    private Long completedTotal;
+    val completedTotal: Long? = null
 
     @Column(name = "uncompleted_total", updatable = false)
-    private Long uncompletedTotal;
+    val uncompletedTotal: Long? = null
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
-    private User user;
+    val user: User? = null
 
-    @Override
-    public String toString() {
+    override fun toString(): String {
         return "Stat{" +
-                "id=" + id +
-                ", completedTotal=" + completedTotal +
-                ", uncompletedTotal=" + uncompletedTotal +
-                ", user=" + user +
-                '}';
-    }
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Stat stat = (Stat) o;
-        return id.equals(stat.id);
+                "id=" + id!! +
+                ", completedTotal=" + completedTotal!! +
+                ", uncompletedTotal=" + uncompletedTotal!! +
+                '}'
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    override fun equals(o: Any?): Boolean {
+        if (this === o) return true
+        if (o == null || javaClass != o.javaClass) return false
+        val stat = o as Stat
+        return id == stat.id
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(id)
     }
 }
