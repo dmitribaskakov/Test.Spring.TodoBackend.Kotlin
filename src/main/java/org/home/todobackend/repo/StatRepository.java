@@ -1,6 +1,5 @@
 package org.home.todobackend.repo;
 
-import org.home.todobackend.entity.Priority;
 import org.home.todobackend.entity.Stat;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
