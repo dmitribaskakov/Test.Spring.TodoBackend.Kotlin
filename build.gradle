@@ -1,7 +1,10 @@
 plugins {
-    id 'org.springframework.boot' version '2.6.1'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id 'java'
+    id 'org.springframework.boot' version '2.6.1' // собирает правильно springboot проект
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE' // управление зависимостями, версиями
+    id 'java' // компиляция и работа обычными java классами
+    id 'org.jetbrains.kotlin.jvm' version '1.6.0' // для корректной компиляции kotlin классов для jvm
+    id "org.jetbrains.kotlin.plugin.spring" version "1.6.0" // для корректного создания spring бинов из котлин классов
+    id "org.jetbrains.kotlin.plugin.jpa" version "1.6.0" // для корректной работы hibernate/jpa с kotlin
 }
 
 group = 'org.home'
@@ -40,10 +43,26 @@ dependencies {
 
     runtimeOnly 'org.postgresql:postgresql'
 
+    // для корректной работы kotlin классов в spring приложении
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
 //    implementation 'org.springframework.boot:spring-boot-starter-security'
 //    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //    testImplementation 'org.springframework.security:spring-security-test'
 }
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
+//compileTestKotlin {
+//    kotlinOptions {
+//        jvmTarget = "1.8"
+//    }
+//}
 
 //test {
 //    useJUnitPlatform()
